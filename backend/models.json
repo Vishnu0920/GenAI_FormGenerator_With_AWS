@@ -1,0 +1,16 @@
+[
+  {
+    "key": "claude-3.5-haiku",
+    "label": "Claude 3.5 Haiku",
+    "id_env": null,
+    "default_id": "anthropic.claude-3-5-haiku-20241022-v1:0",
+    "handler": "claude_haiku_handler"
+  },
+  {
+    "key": "deepseek-r1",
+    "label": "Deepseek-R1",
+    "id_env": null,
+    "default_id": "aarn:aws:bedrock:us-east-1:139759112586:inference-profile/us.deepseek.r1-v1:0",
+    "handler": "deepseek_r1_handler"
+  }
+]
