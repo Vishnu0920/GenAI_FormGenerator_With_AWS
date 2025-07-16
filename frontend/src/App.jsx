@@ -17,8 +17,10 @@ function App() {
     fetch(`${API_BASE_URL}/api/models`)
       .then((res) => res.json())
       .then((data) => {
-        setModels(data);
-        if (data.length > 0) setModel(data[0].value);
+        // Filter out Deepseek if present
+        const filtered = data.filter((m) => m.value !== "deepseek-r1");
+        setModels(filtered);
+        if (filtered.length > 0) setModel(filtered[0].value);
       })
       .catch(() => setError("Failed to load models"));
   }, []);
