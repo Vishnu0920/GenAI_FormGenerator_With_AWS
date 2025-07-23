@@ -24,6 +24,9 @@ backend/.env.local
 .DS_Store
 Thumbs.db
 
+documnetation.zip
 # Editor settings
 .vscode/
 .idea/
+
+documentation.zip

@@ -7,16 +7,19 @@ The PromptToForm project consists of two main components:
 - **Frontend**: React + Vite application for user interaction.
 - **Backend**: Flask API server that communicates with AWS Bedrock for AI-powered form and workflow generation.
 
-```
-[User] ⇄ [React Frontend] ⇄ [Flask Backend] ⇄ [AWS Bedrock]
+```mermaid
+flowchart LR
+    U[User] <--> F[React Frontend]
+    F <--> B[Flask Backend]
+    B <--> A[AWS Bedrock]
 ```
 
 ## Directory Structure
 
 - `frontend/` — React app (UI, API calls)
 - `backend/` — Flask app (API, AWS integration)
-- `backend/form_reference/` — Form schema references
-- `backend/workflow_reference/` — Workflow schema references
+- `backend/form_reference/` — Form schema references-->Sent as reference to the LLM(So that it knows the output format for forms)
+- `backend/workflow_reference/` — Workflow schema references-->Sent as reference to the LLM(So that it knows the output format for workflows)
 
 ## Data Flow
 
