@@ -1,0 +1,47 @@
+{
+  "main_workflows": [
+    {
+      "metadata": {
+        "recordEvent": "Created",
+        "workFlowStatus": "enabled",
+        "workFlowName": "Send Message",
+        "formEvent": "Successfull Form Submission",
+        "actionsList": [
+          {
+            "action": 0,
+            "actionType": "notification",
+            "conditionType": "Always",
+            "conditionString": "",
+            "actionDescription": "",
+            "mail": {
+              "sendToPushNotification": true,
+              "bccEmails": "",
+              "attachment": [],
+              "subject": ["Workflow Test Mail"],
+              "fileFieldAttachment": [],
+              "sendToAppNotification": true,
+              "version": 4,
+              "fromMail": ["notifications@untangleds.com"],
+              "toEmail": [
+                "${Student Email.email-student}",
+                "${Parent's Email.email-parentEmail}"
+              ],
+              "ccEmails": "",
+              "content": [
+                {
+                  "type": "html",
+                  "value": "${First Name.text-firstName}\nThis is a test mail.\n"
+                }
+              ]
+            }
+          }
+        ],
+        "formName": "Student Application Form"
+      },
+      "SK": 1,
+      "options": [],
+      "PK": "Internship_Program#WorkFlow_Engine#Student Application Form#Created#Successfull Form Submission#Send Message#main"
+    }
+  ],
+  "secondary_lookup": []
+}

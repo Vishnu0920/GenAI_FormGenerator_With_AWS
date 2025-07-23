@@ -13,9 +13,31 @@ app = Flask(__name__)
 CORS(app)
 
 # Load field types once at startup
-FIELDS_PATH = os.path.join(os.path.dirname(__file__), 'All_Fields.json')
-with open(FIELDS_PATH, 'r', encoding='utf-8') as f:
+
+
+# Form reference fields and system prompt
+FORM_REFERENCE_DIR = os.path.join(os.path.dirname(__file__), 'form_reference')
+FORM_REFERENCE_PATH = os.path.join(FORM_REFERENCE_DIR, 'All_Fields.json')
+FORM_SYSTEM_PROMPT_PATH = os.path.join(FORM_REFERENCE_DIR, 'system_prompt.txt')
+with open(FORM_REFERENCE_PATH, 'r', encoding='utf-8') as f:
     ALL_FIELDS = json.load(f)
+with open(FORM_SYSTEM_PROMPT_PATH, 'r', encoding='utf-8') as f:
+    FORM_SYSTEM_PROMPT = f.read()
+
+# Workflow reference fields and system prompt (placeholder, update as needed)
+WORKFLOW_REFERENCE_DIR = os.path.join(os.path.dirname(__file__), 'workflow_reference')
+WORKFLOW_REFERENCE_PATH = os.path.join(WORKFLOW_REFERENCE_DIR, 'workflow_reference.json')
+WORKFLOW_SYSTEM_PROMPT_PATH = os.path.join(WORKFLOW_REFERENCE_DIR, 'system_prompt.txt')
+if os.path.exists(WORKFLOW_REFERENCE_PATH):
+    with open(WORKFLOW_REFERENCE_PATH, 'r', encoding='utf-8') as f:
+        WORKFLOW_REFERENCE = json.load(f)
+else:
+    WORKFLOW_REFERENCE = {}  # Empty until you add a schema
+if os.path.exists(WORKFLOW_SYSTEM_PROMPT_PATH):
+    with open(WORKFLOW_SYSTEM_PROMPT_PATH, 'r', encoding='utf-8') as f:
+        WORKFLOW_SYSTEM_PROMPT = f.read()
+else:
+    WORKFLOW_SYSTEM_PROMPT = "You are an expert workflow generator. Given a user prompt and a reference workflow schema, generate a valid workflow JSON."
 
 # Load model registry from models.json
 MODELS_PATH = os.path.join(os.path.dirname(__file__), 'models.json')
@@ -33,29 +55,17 @@ for model in MODELS_LIST:
     }
     MODEL_OPTIONS.append({"label": model["label"], "value": model["key"]})
 
-# System prompt for the LLM
-SYSTEM_PROMPT = """
-You are an expert form builder. Given a user prompt describing a form idea or requirement, your task is to:
 
-1. Carefully analyze the user's input to understand the needs and requirements, and infer what type of form and which field types are necessary for this form.
-2. For each field, if you can reason with over 60% confidence that a field type is needed for the form, include it in the generated schema.
-3. If the form contains any selection fields (checkbox, radio, single select, multi select), you must always include the 'options' key for those fields. The 'checkbox', 'radio', 'single select', and 'multi select' fields must ALWAYS include the 'options' key, no matter what.
-4. For the 'options' values:
-   - If you can deduce, reason, or confidently guess (with 75% or greater certainty) what the option values should be from the prompt, fill the 'options' array with those values.
-   - If you are not sure about the option values, leave the 'options' array empty, but the 'options' key must still be present.
-5. Only use field types and structure as defined in the provided All_Fields.json.
-6. Output the full JSON, including all metadata keys (such as created_person, form_description, created_time, updated_time, referenceDataInfo, updated_person, lookupDataName, formTheme, formLabel, dynamicSKLimit, etc.) as shown in All_Fields.json. The 'formLabel' key must always be present. Strictly follow the key names and structure as in All_Fields.json.
-7. Output only the JSON, nothing else.
-8. If any field is a checkbox ensure that that field has the options key MANDATORILY. The option values can be filled according to the rules mentioned for options as gven before.
-"""
+# Handler for form generation
 
+# Handler for form generation
 def claude_haiku_handler(prompt, all_fields, model_id):
     bedrock = get_bedrock_client()
-    combined_message = f"{SYSTEM_PROMPT}\n\nUser prompt: {prompt}\n\nAvailable field types: {json.dumps(all_fields)}"
+    combined_message = f"{FORM_SYSTEM_PROMPT}\n\nUser prompt: {prompt}\n\nAvailable field types: {json.dumps(all_fields)}"
     native_request = {
         "anthropic_version": "bedrock-2023-05-31",
-        "max_tokens": 4096,  # Increased from 1024
-        "temperature": 0.2,
+        "max_tokens": 4096,
+        "temperature": 1,
         "messages": [
             {"role": "user", "content": [{"type": "text", "text": combined_message}]}
         ]
@@ -64,6 +74,41 @@ def claude_haiku_handler(prompt, all_fields, model_id):
     response = bedrock.invoke_model(modelId=model_id, body=request)
     model_response = json.loads(response["body"].read())
     return model_response["content"][0]["text"].strip()
+
+# Handler for workflow generation (update logic as needed)
+
+# Handler for workflow generation
+def workflow_haiku_handler(prompt, workflow_reference, model_id):
+    bedrock = get_bedrock_client()
+    combined_message = f"{WORKFLOW_SYSTEM_PROMPT}\n\nUser prompt: {prompt}\n\nReference workflow schema: {json.dumps(workflow_reference)}"
+    native_request = {
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 4096,
+        "temperature": 1,
+        "messages": [
+            {"role": "user", "content": [{"type": "text", "text": combined_message}]}
+        ]
+    }
+    request = json.dumps(native_request)
+    response = bedrock.invoke_model(modelId=model_id, body=request)
+    model_response = json.loads(response["body"].read())
+    return model_response["content"][0]["text"].strip()
+@app.route('/api/generate-workflow', methods=['POST'])
+def generate_workflow():
+    data = request.get_json()
+    prompt = data.get('prompt', '').strip()
+    model_key = data.get('model', 'claude-3.5-haiku')
+    if not prompt:
+        return jsonify({'error': 'Prompt is required.'}), 400
+    if model_key not in MODEL_REGISTRY:
+        return jsonify({'error': f'Unknown model: {model_key}'}), 400
+    model_info = MODEL_REGISTRY[model_key]
+    try:
+        # Use workflow handler and reference
+        schema = workflow_haiku_handler(prompt, WORKFLOW_REFERENCE, model_info['id'])
+        return schema, 200, {'Content-Type': 'application/json'}
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/generate-schema', methods=['POST'])
 def generate_schema():

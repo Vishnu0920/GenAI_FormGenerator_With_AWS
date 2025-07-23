@@ -1,0 +1,35 @@
+{
+  "main_workflows": [
+    {
+      "metadata": {
+        "recordEvent": "Edited",
+        "workFlowStatus": "enabled",
+        "workFlowName": "Update Student Record",
+        "formEvent": "Successfull Form Submission",
+        "actionsList": [
+          {
+            "action": 0,
+            "actionType": "data_access",
+            "conditionType": "When Condition Matches",
+            "conditionString": "${Student Status} == 'Approved'",
+            "actionDescription": "Update student record in another form",
+            "dataAccess": {
+              "targetForm": "Student Records",
+              "fieldsToUpdate": {
+                "status": "Approved",
+                "approvalDate": "${Current Date}"
+              },
+              "lookupField": "studentId",
+              "lookupValue": "${Student ID}"
+            }
+          }
+        ],
+        "formName": "Student Application Form"
+      },
+      "SK": 1,
+      "options": [],
+      "PK": "Internship_Program#WorkFlow_Engine#Student Application Form#Edited#Successfull Form Submission#Update Student Record#main"
+    }
+  ],
+  "secondary_lookup": []
+}

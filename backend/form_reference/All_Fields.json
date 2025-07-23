@@ -23,7 +23,8 @@
         "required": false,
         "minLength": null,
         "maxLength": null,
-        "unique": false
+        "unique": false,
+        "lookup_table": false
       }
     },
     {
@@ -36,7 +37,8 @@
       "validation": {
         "required": false,
         "minLength": null,
-        "maxLength": null
+        "maxLength": null,
+        "lookup_table": false
       }
     },
     {
@@ -50,7 +52,8 @@
         "required": false,
         "numberFormatToComma": false,
         "numberToWordsFormat": "none",
-        "commaFormatType": null
+        "commaFormatType": null,
+        "lookup_table": false
       }
     },
     {
@@ -62,7 +65,8 @@
       "options": [" "],
       "validation": {
         "required": false,
-        "unique": false
+        "unique": false,
+        "lookup_table": false
       }
     },
     {
@@ -100,7 +104,8 @@
       "placeholder": "",
       "options": [" "],
       "validation": {
-        "required": false
+        "required": false,
+        "lookup_table": false
       }
     },
     {
@@ -111,7 +116,8 @@
       "placeholder": "",
       "options": [" "],
       "validation": {
-        "required": false
+        "required": false,
+        "lookup_table": false
       }
     },
     {
@@ -122,7 +128,8 @@
       "placeholder": "",
       "options": [" "],
       "validation": {
-        "required": false
+        "required": false,
+        "lookup_table": false
       }
     },
     {
@@ -137,7 +144,8 @@
         "tableDesignType": "table",
         "isAddToMainTable": false,
         "isHideTableElements": false,
-        "isRetainOnMiniTableAdd": false
+        "isRetainOnMiniTableAdd": false,
+        "lookup_table": false
       }
     },
     {
@@ -148,7 +156,8 @@
       "placeholder": "Empty Placeholder...",
       "options": [" "],
       "validation": {
-        "required": false
+        "required": false,
+        "lookup_table": false
       }
     },
     {
@@ -163,7 +172,8 @@
         "font_style": [],
         "fontHeadingColor": "#000000",
         "backgroundHeadingColor": "#ffffff",
-        "alignment_heading": "left"
+        "alignment_heading": "left",
+        "lookup_table": false
       }
     },
     {
@@ -178,7 +188,8 @@
         "font_style": [],
         "fontHeadingColor": "#000000",
         "backgroundHeadingColor": "#ffffff",
-        "alignment_heading": "left"
+        "alignment_heading": "left",
+        "lookup_table": false
       }
     },
     {
@@ -189,7 +200,8 @@
       "placeholder": "Enter",
       "options": [" "],
       "validation": {
-        "htmlCode": null
+        "htmlCode": null,
+        "lookup_table": false
       }
     },
     {
@@ -200,7 +212,8 @@
       "placeholder": "",
       "options": [" "],
       "validation": {
-        "required": false
+        "required": false,
+        "lookup_table": false
       }
     },
     {
@@ -215,7 +228,8 @@
         "btnActionForm": null,
         "btnColor": "primary",
         "btnFieldActionFormName": null,
-        "btnFieldActionFormId": null
+        "btnFieldActionFormId": null,
+        "lookup_table": false
       }
     },
     {
@@ -228,7 +242,8 @@
       "validation": {
         "required": false,
         "dateFormatType": null,
-        "dateTimeAutoFill": false
+        "dateTimeAutoFill": false,
+        "lookup_table": false
       }
     },
     {
@@ -239,7 +254,8 @@
       "placeholder": "Enter time...",
       "options": [" "],
       "validation": {
-        "required": false
+        "required": false,
+        "lookup_table": false
       }
     },
     {
@@ -251,7 +267,8 @@
       "options": [" "],
       "validation": {
         "required": false,
-        "dateTimeAutoFill": false
+        "dateTimeAutoFill": false,
+        "lookup_table": false
       }
     },
     {
@@ -264,7 +281,8 @@
       "validation": {
         "required": false,
         "isEpoch": true,
-        "dateFormatType": null
+        "dateFormatType": null,
+        "lookup_table": false
       }
     },
     {
@@ -277,7 +295,8 @@
       "validation": {
         "required": false,
         "isEpoch": true,
-        "dateTimeAutoFill": false
+        "dateTimeAutoFill": false,
+        "lookup_table": false
       }
     },
     {
@@ -289,7 +308,8 @@
       "options": [" "],
       "validation": {
         "required": false,
-        "fileUploadLimit": "1"
+        "fileUploadLimit": "1",
+        "lookup_table": false
       }
     },
     {
@@ -302,7 +322,8 @@
       "validation": {
         "required": false,
         "minLength": null,
-        "maxLength": null
+        "maxLength": null,
+        "lookup_table": false
       }
     },
     {
@@ -313,7 +334,8 @@
       "placeholder": "Enter range...",
       "options": [" "],
       "validation": {
-        "required": false
+        "required": false,
+        "lookup_table": false
       }
     },
     {
@@ -324,7 +346,8 @@
       "placeholder": "Enter color...",
       "options": [" "],
       "validation": {
-        "required": false
+        "required": false,
+        "lookup_table": false
       }
     }
   ],

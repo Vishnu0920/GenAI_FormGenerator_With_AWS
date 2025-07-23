@@ -1,0 +1,7 @@
+{
+  "recordEvent": ["Created", "Edited", "Created_or_Edited", "Deleted"],
+  "workFlowStatus": ["enabled", "disabled"],
+  "formEvent": ["Successfull Form Submission", "Field Rules"],
+  "actionType": ["notification", "data_access"],
+  "conditionType": ["Always", "onCondition"]
+}
