@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const API_BASE_URL = "http://localhost:5000";
 
@@ -10,10 +10,36 @@ function WorkflowTab({ models }) {
   const [copied, setCopied] = useState(false);
   const [model, setModel] = useState(models.length > 0 ? models[0].value : "");
   const [jsonSize, setJsonSize] = useState(0);
+  const [forms, setForms] = useState([]);
+  const [selectedForm, setSelectedForm] = useState("");
+
+  // Fetch available forms on component mount
+  useEffect(() => {
+    const fetchForms = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/forms`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch forms");
+        }
+        const data = await response.json();
+        setForms(data);
+        if (data.length > 0) {
+          setSelectedForm(data[0].value);
+        }
+      } catch (err) {
+        setError("Error loading forms: " + err.message);
+      }
+    };
+    fetchForms();
+  }, []);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
       setError("Please enter a description for your workflow.");
+      return;
+    }
+    if (!selectedForm) {
+      setError("Please select a form first.");
       return;
     }
     setLoading(true);
@@ -24,7 +50,7 @@ function WorkflowTab({ models }) {
       const response = await fetch(`${API_BASE_URL}/api/generate-workflow`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, model }),
+        body: JSON.stringify({ prompt, model, form: selectedForm }),
       });
       if (!response.ok) {
         const err = await response.json();
@@ -62,20 +88,13 @@ function WorkflowTab({ models }) {
       setError("File size exceeds 400kB limit. Cannot download.");
       return;
     }
-    let json, label;
     try {
-      json = JSON.parse(output);
-      label = json.label || json.workflowLabel || json.title || "workflow";
+      JSON.parse(output);
     } catch (e) {
       setError("Output is not valid JSON. Cannot download.");
       return;
     }
-    const fileName = `${
-      label
-        .replace(/[^a-zA-Z0-9 _-]/g, "")
-        .replace(/\s+/g, " ")
-        .trim() || "workflow"
-    }.json`;
+    const fileName = "Internship_Program_Form_Workflows.json";
     const blob = new Blob([output], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -90,6 +109,26 @@ function WorkflowTab({ models }) {
   return (
     <div className="main-content">
       <div className="input-section">
+        <label htmlFor="formSelect">📋 Select Form:</label>
+        <select
+          id="formSelect"
+          value={selectedForm}
+          onChange={(e) => setSelectedForm(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "8px",
+            marginBottom: "20px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+          }}
+        >
+          {forms.map((form) => (
+            <option key={form.value} value={form.value}>
+              {form.label}
+            </option>
+          ))}
+        </select>
+
         <label htmlFor="workflowPromptInput">
           🛠️ Describe your workflow requirements:
         </label>
