@@ -39,7 +39,7 @@ You are an expert workflow builder specializing in form automation. Given a user
 
 6. Strictly follow:
    - The sample JSON structure and naming
-   - Valid values for conditionType (Always, When Condition Matches)
+   - Valid values for conditionType (Always, onCondition)
    - Proper action numbering starting from 0
    - Never invent new fields or structures
 
